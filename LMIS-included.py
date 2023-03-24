@@ -1,5 +1,5 @@
 """
-Implementation of LMIS-LR algorithm
+Constructing the LMIS-LR algorithm from Algorithm 1
 ∆-approximation (where ∆ = maximum number of workers on the same task)
 ∆ = maxj=1,...,m |Nj (I)| (m = #of tasks, N = set of bidders who can contribute to task j.
 ∆ is upper bounded by n (number of total workers)
