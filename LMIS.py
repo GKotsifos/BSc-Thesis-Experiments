@@ -113,14 +113,3 @@ class LMIS:
             S.remove(self.get_min_j())  # line 8
 
         return S  # S
-
-
-p = [10, 2, 3]
-T = [[1, 3], [2, 4], [1, 5]]
-r = [2, 1, 4]
-D = [4, 4, 3, 4, 0]
-J = [1, 2, 3]
-m = 5
-P1 = LMIS(p, T, r, D, J, m)
-sol = P1.run()
-print("Solution is: ", sol)
