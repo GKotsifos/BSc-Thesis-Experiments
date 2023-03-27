@@ -15,13 +15,13 @@ class A:
         self.contribution = contribution
         self.demand = demand
 
-    def calc_Q(self,q):
+    def calc_Q(self, q):
 
         sum_q = [0] * len(self.demand)
         for j in range(1, len(self.demand) + 1):
             for x in range(len(b)):
-                if (b[x][1][0] <= j <= b[x][1][1]):
-                    sum_q[j-1] += self.contribution[x]
+                if b[x][1][0] <= j <= b[x][1][1]:
+                    sum_q[j - 1] += q[x]
         return sum_q
 
     def run(self):
@@ -38,18 +38,23 @@ class A:
         for i in range(len(Q)):
             D[i] = Q[i] - self.demand[i]
 
-        J = [1, 2, 3]
-        m = 5
+        J = []
+        for i in range(1, len(q)+1):
+            J.append(i)
+
+        m = len(self.demand)
 
         P2 = LMIS(p, T, r, D, J, m)
-        alg2_sol = P2.run()
+        alg2_sol, alg2_cost = P2.run()
 
-        return alg2_sol
+        return alg2_sol, alg2_cost
 
-#########Example#########
+
+# --------Example---------
 b = [[10, [1, 3]], [2, [2, 4]], [3, [1, 5]]]
 q = [2, 1, 4]
 d = [2, 3, 4, 1, 4]
 P1 = A(b, q, d)
-sol = P1.run()
-print("LMIS is:", sol)
+sol, cost = P1.run()
+print("LMIS solution is:", sol)
+print("The cost is:", cost)
