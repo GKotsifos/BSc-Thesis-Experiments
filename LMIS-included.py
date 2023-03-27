@@ -25,8 +25,8 @@ class A:
         sum_q = [0] * len(self.demand)
         for j in range(1, len(self.demand) + 1):
             for x in range(len(b)):
-                if (b[x][1][0] <= j <= b[x][1][1]):
-                    sum_q[j - 1] += self.contribution[x]
+                if b[x][1][0] <= j <= b[x][1][1]:
+                    sum_q[j - 1] += q[x]
         return sum_q
 
     def run(self):
@@ -43,8 +43,11 @@ class A:
         for i in range(len(Q)):
             D[i] = Q[i] - self.demand[i]
 
-        J = [1, 2, 3]
-        m = 5
+        J = []
+        for i in range(1, len(q)+1):
+            J.append(i)
+
+        m = len(self.demand)
 
         P2 = LMIS(p, T, r, D, J, m)
         alg2_sol = P2.run()
@@ -81,7 +84,7 @@ class LMIS:
         for j in range(1, self.time_instants + 1):
 
             in_T = []
-            for k in (S):
+            for k in S:
                 if self.intervals[k - 1][0] <= j <= self.intervals[k - 1][1]:
                     in_T.append(k - 1)
 
@@ -136,7 +139,7 @@ class LMIS:
             ek = []  # line 5
             for i in Sk:  # line 5
                 temp_R = self.get_r_max()  # line 5
-                if (temp_R < self.activ_resour[i - 1]):  # line 5
+                if temp_R < self.activ_resour[i - 1]:  # line 5
                     denominator = temp_R  # line 5
                 else:  # line 5
                     denominator = self.activ_resour[i - 1]  # line 5
@@ -151,9 +154,9 @@ class LMIS:
                     self.set_min_j(Sk[i])
 
             for i in range(1, self.time_instants + 1):  # line 6
-                if (i in Sk):  # line 6a
+                if i in Sk:  # line 6a
                     temp_R = self.get_r_max()  # line 6a
-                    if (temp_R < self.activ_resour[i - 1]):  # line 6a
+                    if temp_R < self.activ_resour[i - 1]:  # line 6a
                         denominator = temp_R  # line 6a
                     else:  # line 6a
                         denominator = self.activ_resour[i - 1]  # line 6a
@@ -163,16 +166,22 @@ class LMIS:
             S.remove(self.get_min_j())  # line 8
 
         solution = []
+        cost = 0
         for i in self.J:
             if i not in S:
                 solution.append(i)
-        return solution  # return N\S
+
+        for i in solution:
+            cost += self.penalty[i-1]
+
+        return solution, cost  # return N\S
 
 
-#########Example#########
-b = [[10, [1, 3]], [2, [2, 3]], [3, [4, 5]]]
-q = [2, 3, 4]
-d = [2, 3, 4, 1, 4]
+# --------Example---------
+b = [[10, [1, 3]], [7, [2, 3]], [3, [1, 5]], [4, [4, 7]]]
+q = [2, 3, 4, 8]
+d = [2, 3, 4, 1, 4, 6, 7]
 P1 = A(b, q, d)
-sol = P1.run()
-print("LMIS is:", sol)
+sol, cost = P1.run()
+print("LMIS solution is:", sol)
+print("The cost is:", cost)
