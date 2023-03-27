@@ -35,7 +35,7 @@ class LMIS:
         for j in range(1, self.time_instants + 1):
 
             in_T = []
-            for k in (S):
+            for k in S:
                 if self.intervals[k - 1][0] <= j <= self.intervals[k - 1][1]:
                     in_T.append(k - 1)
 
@@ -90,7 +90,7 @@ class LMIS:
             ek = []  # line 5
             for i in Sk:  # line 5
                 temp_R = self.get_r_max()  # line 5
-                if (temp_R < self.activ_resour[i - 1]):  # line 5
+                if temp_R < self.activ_resour[i - 1]:  # line 5
                     denominator = temp_R  # line 5
                 else:  # line 5
                     denominator = self.activ_resour[i - 1]  # line 5
@@ -105,9 +105,9 @@ class LMIS:
                     self.set_min_j(Sk[i])
 
             for i in range(1, self.time_instants + 1):  # line 6
-                if (i in Sk):  # line 6a
+                if i in Sk:  # line 6a
                     temp_R = self.get_r_max()  # line 6a
-                    if (temp_R < self.activ_resour[i - 1]):  # line 6a
+                    if temp_R < self.activ_resour[i - 1]:  # line 6a
                         denominator = temp_R  # line 6a
                     else:  # line 6a
                         denominator = self.activ_resour[i - 1]  # line 6a
@@ -117,7 +117,12 @@ class LMIS:
             S.remove(self.get_min_j())  # line 8
 
         solution = []
+        cost = 0
         for i in self.J:
             if i not in S:
                 solution.append(i)
-        return solution  # return N\S
+
+        for i in solution:
+            cost += self.penalty[i - 1]
+
+        return solution, cost  # return N\S
