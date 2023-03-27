@@ -15,8 +15,8 @@ class LMIS:
         :param intervals: T /vector of intervals size n        // T = [[1,3], [2,4], [1,5]]
         :param activ_resour: r / vector                        // r = [5,7,8]
         :param avail_resour: D / vector size m                 // D = [15,12,18,20,11]
-        :param set_activities: J / set (S)                     // J = {1,,2,3} - 3 activities
-        :param time_instants: m/ list of time instants         // m= {1,2,3,4,5} - 5 time instances
+        :param set_activities: J / set (S)                     // J = {1,,2,3}
+        :param time_instants: m/ list of time instants         // m= {1,2,3,4,5}
         """
 
         self.penalty = penalty
@@ -36,8 +36,8 @@ class LMIS:
 
             in_T = []
             for k in (S):
-                if self.intervals[k-1][0] <= j <= self.intervals[k-1][1]:
-                    in_T.append(k-1)
+                if self.intervals[k - 1][0] <= j <= self.intervals[k - 1][1]:
+                    in_T.append(k - 1)
 
             ri = 0
             for x in in_T:
@@ -52,22 +52,22 @@ class LMIS:
         self.set_r_max(max(max_r))
         return max(max_r)
 
-    def set_t_max(self, x): # line 3
+    def set_t_max(self, x):  # line 3
         self.t = x
 
-    def get_t_max(self):    # line 3
+    def get_t_max(self):  # line 3
         return self.t
 
-    def set_min_j(self, x): # line 7
+    def set_min_j(self, x):  # line 7
         self.j = x
 
-    def get_min_j(self):    # line 7
+    def get_min_j(self):  # line 7
         return self.j
 
-    def set_r_max(self, x): # line 2
+    def set_r_max(self, x):  # line 2
         self.r_max = x
 
-    def get_r_max(self):    # line 2
+    def get_r_max(self):  # line 2
         return self.r_max
 
     def run(self):
@@ -83,33 +83,41 @@ class LMIS:
             Jt = []  # line 4
             for x in range(len(self.intervals)):  # line 4
                 if self.intervals[x][0] <= tmax <= self.intervals[x][1]:  # line 4
-                    Jt.append(x+1)  # line 4
+                    Jt.append(x + 1)  # line 4
 
             Sk = [value for value in S if value in Jt]  # line 4
 
-            ek = [] # line 5
-            for i in Sk:    # line 5
-                temp_R = self.get_r_max()# line 5
-                if (temp_R < self.activ_resour[i-1]):   # line 5
-                    denominator = temp_R    # line 5
-                else:   # line 5
-                    denominator = self.activ_resour[i-1]    # line 5
-                ek.append(pk[i-1]/denominator)    # line 5
-            min_ek = min(ek)
+            ek = []  # line 5
+            for i in Sk:  # line 5
+                temp_R = self.get_r_max()  # line 5
+                if (temp_R < self.activ_resour[i - 1]):  # line 5
+                    denominator = temp_R  # line 5
+                else:  # line 5
+                    denominator = self.activ_resour[i - 1]  # line 5
+                ek.append(pk[i - 1] / denominator)  # line 5
+            if ek:
+                min_ek = min(ek)
+            else:
+                print("Infeasible Solution")
+                quit()
             for i in range(len(ek)):
                 if (ek[i] == min_ek):
                     self.set_min_j(Sk[i])
 
-            for i in range(1,self.time_instants+1): # line 6
-                if (i in Sk):   # line 6a
+            for i in range(1, self.time_instants + 1):  # line 6
+                if (i in Sk):  # line 6a
                     temp_R = self.get_r_max()  # line 6a
                     if (temp_R < self.activ_resour[i - 1]):  # line 6a
                         denominator = temp_R  # line 6a
                     else:  # line 6a
                         denominator = self.activ_resour[i - 1]  # line 6a
 
-                    pk[i-1] = pk[i-1] - min_ek*denominator  # line 6a
+                    pk[i - 1] = pk[i - 1] - min_ek * denominator  # line 6a
 
             S.remove(self.get_min_j())  # line 8
 
-        return S  # S
+        solution = []
+        for i in self.J:
+            if i not in S:
+                solution.append(i)
+        return solution  # return N\S
