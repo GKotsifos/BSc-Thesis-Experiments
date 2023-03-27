@@ -166,7 +166,7 @@ class LMIS:
         for i in self.J:
             if i not in S:
                 solution.append(i)
-        return solution  # return N/S
+        return solution  # return N\S
 
 
 #########Example#########
