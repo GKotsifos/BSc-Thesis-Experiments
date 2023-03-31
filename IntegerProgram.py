@@ -1,7 +1,7 @@
 import cvxpy
 import numpy as np
 
-#############################################
+##############################################
 # The data for solving the Integer Problem
 # c is cost of including a worker / size n
 # q is the contribution of a worker / size n
