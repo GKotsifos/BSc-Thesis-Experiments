@@ -44,7 +44,7 @@ class A:
             D[i] = Q[i] - self.demand[i]
 
         J = []
-        for i in range(1, len(q)+1):
+        for i in range(1, len(q) + 1):
             J.append(i)
 
         m = len(self.demand)
@@ -64,7 +64,7 @@ class LMIS:
         :param intervals: T /vector of intervals size n        // T = [[1,3], [2,4], [1,5]]
         :param activ_resour: r / vector                        // r = [5,7,8]
         :param avail_resour: D / vector size m                 // D = [15,12,18,20,11]
-        :param set_activities: J / set (S)                     // J = {1,,2,3}
+        :param set_activities: J / set (S)                     // J = {1,2,3}
         :param time_instants: m/ list of time instants         // m= {1,2,3,4,5}
         """
 
@@ -145,10 +145,11 @@ class LMIS:
                     denominator = self.activ_resour[i - 1]  # line 5
                 ek.append(pk[i - 1] / denominator)  # line 5
             if ek:
-                min_ek = min(ek)
+                min_ek = min(ek)  # line 5
             else:
                 print("Infeasible Solution")
                 quit()
+
             for i in range(len(ek)):
                 if (ek[i] == min_ek):
                     self.set_min_j(Sk[i])
@@ -163,6 +164,7 @@ class LMIS:
 
                     pk[i - 1] = pk[i - 1] - min_ek * denominator  # line 6a
 
+            j = self.get_min_j()  # line 7
             S.remove(self.get_min_j())  # line 8
 
         solution = []
@@ -172,13 +174,13 @@ class LMIS:
                 solution.append(i)
 
         for i in solution:
-            cost += self.penalty[i-1]
+            cost += self.penalty[i - 1]
 
         return solution, cost  # return N\S
 
 
 # --------Example---------
-b = [[10, [1, 3]], [7, [2, 3]], [3, [1, 5]], [4, [4, 7]]]
+b = [[10, [1, 3]], [7, [2, 4]], [3, [1, 2]], [4, [4, 7]]]
 q = [2, 3, 4, 8]
 d = [2, 3, 4, 1, 4, 6, 7]
 P1 = A(b, q, d)
