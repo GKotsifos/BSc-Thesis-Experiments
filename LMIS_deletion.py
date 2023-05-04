@@ -4,6 +4,7 @@ Constructing the LMIS-LR algorithm from Algorithm 1
 ∆ = maxj=1,...,m |Nj (I)| (m = #of tasks, N = set of bidders who can contribute to task j.
 ∆ is upper bounded by n (number of total workers)
 """
+from copy import deepcopy
 
 
 class A:
@@ -54,6 +55,7 @@ class A:
             J.append(i)
 
         m = len(self.demand)
+
         P2 = LMIS(p, T, r, D, J, m, self.demand)
         alg2_sol = P2.run()
 
@@ -82,15 +84,16 @@ class LMIS:
         self.time_instants = time_instants
         self.upd_demand = upd_demand
 
-    def calc_max_R(self, S):  # r(q) - D
-        """ #
+    def calc_max_R(self, S):
+        """
         R*(S,T,D)
         :return:
         """
+
         max_r = []
         for j in range(1, self.time_instants + 1):
             in_T = []
-            for k in S:  # old= k in (S)
+            for k in S:
                 if self.intervals[k - 1][0] <= j <= self.intervals[k - 1][1]:
                     in_T.append(k - 1)
 
@@ -131,6 +134,7 @@ class LMIS:
         :return:
         """
         S = self.J.copy()  # line1
+
         k = 0  # line1
         pk = self.penalty.copy()
         selection_order = []
@@ -186,26 +190,22 @@ class LMIS:
 
         final_solution = initial_solution.copy()
 
-        S = self.J.copy()
+        # here starts the deletion
+        S = []
+        for i in range(1, len(initial_solution)+1):
+            if i not in initial_solution:
+                S.append(i)
+
         for i in reversed(selection_order):
+
+            S.append(i)
 
             final_solution.remove(i)
 
-            # creating copies
-            copy_intervals = self.intervals.copy()
-            copy_activ_resour = self.activ_resour.copy()
-
-            # deletion
-            del self.intervals[i - 1]
-            del self.activ_resour[i - 1]
-            Q = A.calc_Q(self.activ_resour, self.upd_demand, self.intervals)
-            self.avail_resour = A.calc_D(Q, self.upd_demand)
-
-            S.pop()
             if self.calc_max_R(S) > 0:
                 final_solution.append(i)
-                self.intervals = copy_intervals
-                self.activ_resour = copy_activ_resour
+                S.pop()
+            final_solution.sort()
 
             final_cost = 0
             for i in final_solution:
@@ -215,9 +215,9 @@ class LMIS:
 
 
 # --------Example---------
-b = [[1.5, [1, 2]], [2, [1, 2]], [2, [1, 3]]]
-q = [3, 3, 3]
-d = [3, 2, 3]
+b = [[10, [1, 3]], [7, [2, 4]], [3, [1, 2]], [4, [4, 7]]]
+q = [2, 3, 4, 8]
+d = [2, 3, 4, 1, 4, 6, 7]
 P1 = A(b, q, d)
 initial_sol, initial_cost, order, final_sol, final_cos = P1.run()
 print("Initial LMIS solution is:", initial_sol)
