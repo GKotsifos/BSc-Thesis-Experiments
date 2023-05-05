@@ -1,7 +1,8 @@
-from LMIS_deletion import A
-from LMIS_included import Algo
+from algorithms.LMIS_deletion import A
+from algorithms.LMIS_included import Algo
 import csv
 import ast
+import os
 
 
 class AlgorithmExecutioner:
@@ -24,7 +25,8 @@ class AlgorithmExecutioner:
 if __name__ == '__main__':
     filenames = ['instance01.csv', 'instance02.csv']
     for filename in filenames:
-        with open(filename) as file:
+        dataset_path = os.path.join(os.path.dirname(__file__), 'datasets', filename)
+        with open(dataset_path) as file:
             reader = csv.DictReader(file)
             b = []
             q = []
