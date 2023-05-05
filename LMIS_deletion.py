@@ -5,6 +5,8 @@ Constructing the LMIS-LR algorithm from Algorithm 1
 ∆ is upper bounded by n (number of total workers)
 """
 from copy import deepcopy
+import csv
+import ast
 
 
 class A:
@@ -51,7 +53,7 @@ class A:
         D = self.calc_D(Q, self.demand)
 
         J = []
-        for i in range(1, len(q) + 1):
+        for i in range(1, len(self.contribution) + 1):
             J.append(i)
 
         m = len(self.demand)
@@ -208,20 +210,7 @@ class LMIS:
             final_solution.sort()
 
             final_cost = 0
-            for i in final_solution:
-                final_cost += self.penalty[i - 1]
+            for j in final_solution:
+                final_cost += self.penalty[j - 1]
 
-        return initial_solution, initial_cost, selection_order, final_solution, final_cost
-
-
-# --------Example---------
-b = [[10, [1, 3]], [7, [2, 4]], [3, [1, 2]], [4, [4, 7]]]
-q = [2, 3, 4, 8]
-d = [2, 3, 4, 1, 4, 6, 7]
-P1 = A(b, q, d)
-initial_sol, initial_cost, order, final_sol, final_cos = P1.run()
-print("Initial LMIS solution is:", initial_sol)
-print("The initial cost is:", initial_cost)
-print("Order of selection is:", order)
-print("Final LMIS solution is:", final_sol)
-print("The final cost is:", final_cos)
+        return selection_order, final_solution, final_cost
