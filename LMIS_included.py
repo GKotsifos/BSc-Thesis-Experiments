@@ -6,7 +6,7 @@ Constructing the LMIS-LR algorithm from Algorithm 1
 """
 
 
-class A:
+class Algo:
 
     def __init__(self, bidding_profile, contribution, demand):
         """
@@ -24,8 +24,8 @@ class A:
 
         sum_q = [0] * len(self.demand)
         for j in range(1, len(self.demand) + 1):
-            for x in range(len(b)):
-                if b[x][1][0] <= j <= b[x][1][1]:
+            for x in range(len(self.b_profile)):
+                if self.b_profile[x][1][0] <= j <= self.b_profile[x][1][1]:
                     sum_q[j - 1] += q[x]
         return sum_q
 
@@ -44,7 +44,7 @@ class A:
             D[i] = Q[i] - self.demand[i]
 
         J = []
-        for i in range(1, len(q) + 1):
+        for i in range(1, len(self.contribution) + 1):
             J.append(i)
 
         m = len(self.demand)
@@ -177,13 +177,3 @@ class LMIS:
             cost += self.penalty[i - 1]
 
         return solution, cost  # return N\S
-
-
-# --------Example---------
-b = [[10, [1, 3]], [7, [2, 4]], [3, [1, 2]], [4, [4, 7]]]
-q = [2, 3, 4, 8]
-d = [2, 3, 4, 1, 4, 6, 7]
-P1 = A(b, q, d)
-sol, cost = P1.run()
-print("LMIS solution is:", sol)
-print("The cost is:", cost)
