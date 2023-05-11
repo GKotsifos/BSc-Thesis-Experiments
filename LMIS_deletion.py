@@ -194,7 +194,7 @@ class LMIS:
 
         # here starts the deletion
         S = []
-        for i in range(1, len(initial_solution)+1):
+        for i in range(1, len(self.J)+1):
             if i not in initial_solution:
                 S.append(i)
 
@@ -206,7 +206,8 @@ class LMIS:
 
             if self.calc_max_R(S) > 0:
                 final_solution.append(i)
-                S.pop()
+            S.pop()
+
             final_solution.sort()
 
             final_cost = 0
