@@ -13,17 +13,14 @@ class IP:
         self.xi = []
 
     def solve(self):
-        # Create a binary optimization problem
+
         prob = LpProblem("IntegerProgram", LpMinimize)
 
-        # Create decision variables xi
         self.xi = [LpVariable("x{}".format(i), cat=LpBinary) for i in range(len(self.c))]
 
-        # Define the objective function
         objective = lpSum(self.xi[i] * self.c[i] for i in range(len(self.c)))
         prob += objective
 
-        # Add constraints
         for j in range(len(self.d)):
             constraint_terms = []
             for i in range(len(self.c)):
@@ -32,18 +29,14 @@ class IP:
             constraint = lpSum(constraint_terms) >= self.d[j]
             prob += constraint
 
-        # Solve the problem
         prob.solve()
 
-        # Check the status of the solution
         if LpStatus[prob.status] != 'Optimal':
             print("No optimal solution found.")
             return None, None
 
-        # Get the optimal values of xi
         optimal_values = [value(self.xi[i]) for i in range(len(self.c))]
 
-        # Calculate the minimum sum
         min_sum = sum(optimal_values[i] * self.c[i] for i in range(len(self.c)))
 
         return optimal_values, min_sum
