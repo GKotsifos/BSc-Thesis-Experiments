@@ -147,8 +147,7 @@ class LMIS:
             if ek:
                 min_ek = min(ek)  # line 5
             else:
-                print("Infeasible Solution")
-                quit()
+                return 0, 0
 
             for i in range(len(ek)):
                 if (ek[i] == min_ek):
