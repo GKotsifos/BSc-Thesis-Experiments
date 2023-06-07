@@ -4,9 +4,6 @@ Constructing the LMIS-LR algorithm from Algorithm 1
 ∆ = maxj=1,...,m |Nj (I)| (m = #of tasks, N = set of bidders who can contribute to task j.
 ∆ is upper bounded by n (number of total workers)
 """
-from copy import deepcopy
-import csv
-import ast
 
 
 class A:
@@ -160,11 +157,10 @@ class LMIS:
             if ek:
                 min_ek = min(ek)  # line 5
             else:
-                print("Infeasible Solution")
-                quit()
+                return 0, 0, 0
 
             for i in range(len(ek)):
-                if (ek[i] == min_ek):
+                if ek[i] == min_ek:
                     self.set_min_j(Sk[i])
 
             for i in range(1, self.time_instants + 1):  # line 6
@@ -194,7 +190,7 @@ class LMIS:
 
         # here starts the deletion
         S = []
-        for i in range(1, len(self.J)+1):
+        for i in range(1, len(self.J) + 1):
             if i not in initial_solution:
                 S.append(i)
 
@@ -206,12 +202,12 @@ class LMIS:
 
             if self.calc_max_R(S) > 0:
                 final_solution.append(i)
-            S.pop()
+                S.pop()
 
-            final_solution.sort()
+        final_solution.sort()
 
-            final_cost = 0
-            for j in final_solution:
-                final_cost += self.penalty[j - 1]
+        final_cost = 0
+        for j in final_solution:
+            final_cost += self.penalty[j - 1]
 
         return selection_order, final_solution, final_cost
