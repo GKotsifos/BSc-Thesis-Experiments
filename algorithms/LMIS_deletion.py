@@ -204,10 +204,10 @@ class LMIS:
                 final_solution.append(i)
                 S.pop()
 
-            final_solution.sort()
+        final_solution.sort()
 
-            final_cost = 0
-            for j in final_solution:
-                final_cost += self.penalty[j - 1]
+        final_cost = 0
+        for j in final_solution:
+            final_cost += self.penalty[j - 1]
 
         return selection_order, final_solution, final_cost
